@@ -32,7 +32,6 @@ const App = () => {
 
   const handleClick = () => {
     setSelected({ ...selected, selected: randomElement })
-    console.log("random", randomElement)
     }
 
   return (
