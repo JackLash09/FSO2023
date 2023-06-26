@@ -14,6 +14,12 @@ const AnecdoteSelector = (props) => {
   )
 }
 
+const Display = (props) => {
+  return(
+    <div>has {props.count} votes</div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -27,17 +33,27 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  //const votes = new Uint8Array(anecdotes.length); 
+  const votes = [0, 1, 2, 3, 4, 5, 6, 7]
 
   const randomElement = [(Math.floor(Math.random() * (anecdotes.length)))]
 
-  const handleClick = () => {
+  const randomClick = () => {
+    console.log(votes)
+    console.log("random", randomElement)
     setSelected({ ...selected, selected: randomElement })
     }
+
+  const vote = () => {
+    votes[randomElement] = votes[randomElement] + 1
+  }
 
   return (
     <div>
       <AnecdoteSelector anecdotes={anecdotes} selector={randomElement} />
-      <Button handleClick={handleClick} text="next anecdote" />
+      <Display count={votes[randomElement]} />
+      <Button handleClick={vote} text="vote"/>
+      <Button handleClick={randomClick} text="next anecdote" />
     </div>
   )
 }
