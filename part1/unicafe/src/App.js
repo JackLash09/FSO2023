@@ -8,16 +8,10 @@ const Button = (props) => {
   )
 }
 
-const Display = (props) => {
-  return (
-    <div>{props.title}</div>
-  )
-}
-
 const App = () => {
   // save clicks of each button to its own state
   const [clicks, setClicks] = useState({
-    good: 0, neutral: 0, bad: 0
+    good: 0, neutral: 0, bad: 0,
   })
 
   const handleGoodClick = () => {
@@ -35,6 +29,10 @@ const App = () => {
   console.log("clicks", clicks)
   }
 
+  let all = (clicks.good + clicks.neutral + clicks.bad)
+  let average = ((clicks.good - clicks.bad) / all)
+  let positive = ((clicks.good / all) * 100)
+
   return (
     <div>
       <h2>give feedback</h2>
@@ -45,6 +43,9 @@ const App = () => {
       <div>good {clicks.good}</div>
       <div>neutral {clicks.neutral}</div>
       <div>bad {clicks.bad}</div>
+      <div>all {all}</div>
+      <div>average {average}</div>
+      <div>positive {positive} %</div>
     </div>
   )
 }
