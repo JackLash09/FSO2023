@@ -33,17 +33,21 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-
   const [votes, setVotes] = useState({
     count: new Uint8Array(anecdotes.length)
   })
-
   const [randomNumber, setRandomNumber] = useState(0);
+  const [mostVotes, setMostVotes ] = useState(0)
+
+  function getMostVotes() {
+    let highestVote = votes.count.indexOf(Math.max(...votes.count));
+    return(highestVote)
+  }
 
   function rng() {
     return [(Math.floor(Math.random() * (anecdotes.length)))]
   }
-  
+
   const randomClick = () => {
     setRandomNumber(rng)
     setSelected({ ...selected, selected: randomNumber})
@@ -53,7 +57,9 @@ const App = () => {
 
   const vote = () => {
     setVotes({...votes, votes: votes.count[randomNumber] += 1})
+    setMostVotes(getMostVotes)
   }
+
 
   return (
     <div>
@@ -61,6 +67,7 @@ const App = () => {
       <Display count={votes.count[randomNumber]} />
       <Button handleClick={vote} text="vote"/>
       <Button handleClick={randomClick} text="next anecdote" />
+      <AnecdoteSelector anecdotes={anecdotes} selector={mostVotes} />
     </div>
   )
 }
