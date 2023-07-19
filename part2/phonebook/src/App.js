@@ -2,21 +2,29 @@ import { useState } from 'react'
 import Name from './components/Name'
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
+
+  const includes = persons.some(person => person.content === (newName))
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
+
   const addName = (event) => {
     event.preventDefault()
     const noteObject = {
       content: newName,
       id: persons.length + 1
     }
-  
-    setPersons(persons.concat(noteObject))
-    setNewName('')
+    if (includes === true){
+      (window.alert(`${newName} is already added to phonebook`))
+      setNewName('')
+    }
+    else{
+      setPersons(persons.concat(noteObject))
+      setNewName('')
+    }
   }
 
   return (
@@ -44,3 +52,6 @@ const App = () => {
 }
 
 export default App
+
+
+// persons.inludes() ? :
