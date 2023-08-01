@@ -16,7 +16,7 @@ const App = () => {
       })
   }, [])
 
-  const includes = persons.some(person => person.name === (newName))
+  const includes = persons.some(person => person.name.toLowerCase() === (newName).toLowerCase())
 
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))
 
@@ -32,7 +32,7 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    const noteObject = {
+    const personObject = {
       name: newName,
       number: newNumber,
       id: persons.length + 1
@@ -43,9 +43,13 @@ const App = () => {
       setNewNumber('')
     }
     else{
-      setPersons(persons.concat(noteObject))
-      setNewName('')
-      setNewNumber('')
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+      })
     }
   }
 
