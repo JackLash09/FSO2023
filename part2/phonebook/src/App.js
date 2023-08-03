@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Name from './components/Name'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))
 
@@ -43,28 +45,36 @@ const App = () => {
       if (window.confirm(`${newName} is already added to phonebook, replace old number with new one?`))
       {
         updatePerson(personObject)
-        setNewName('')
-        setNewNumber('')
+        setSuccessMessage(
+          `Updated ${personObject.name}`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       }
-      
     }
-    else{
+    else
+    {
       personService
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
+        setSuccessMessage(
+          `Added ${returnedPerson.name}`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       })
     }
+    setNewName('')
+    setNewNumber('')
   }
 
   // UPDATE //
   const updatePerson = personToUpdate => {
     const person = persons.find(n => n.name.toLowerCase() === personToUpdate.name.toLowerCase())
     const changedPerson = { ...person, number: personToUpdate.number }
-    console.log("person", person)
-    console.log("changedPerson", changedPerson)
   
     personService
     .update(changedPerson.id, changedPerson)
@@ -85,6 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <form>
         <div>
           search by name: <input
