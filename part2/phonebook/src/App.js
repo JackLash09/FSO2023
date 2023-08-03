@@ -10,6 +10,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))
 
@@ -87,7 +88,17 @@ const App = () => {
   const deletePerson = person => {
     if (window.confirm(`Delete ${person.name}?`))
     {
-      personService.remove(person.id)
+      personService
+        .remove(person.id)
+        .then(response => {
+          console.log(`${person.name} was deleted?`)
+        })
+        .catch(error => {
+          setErrorMessage(`Information of ${person.name} has already been removed from server`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
       setPersons(persons.filter(x => x.id !== person.id))
     }
   }
@@ -95,7 +106,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={successMessage} type="success" />
+      <Notification message={errorMessage} type="error" />
       <form>
         <div>
           search by name: <input
