@@ -26,6 +26,11 @@ let persons = [
     }
 ]
 
+const generateId = () => {
+    const idGen = Math.random(0, 9999) * 1000
+    return Math.round(idGen)
+  }
+
 app.get('/', (request, response) => {
     response.send('<h1>Phonebook</h1>')
   })
@@ -55,6 +60,26 @@ app.delete('/api/persons/:id', (request, response) => {
     persons = persons.filter(person => person.id !== id)
     
     response.status(204).end()
+    })
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    
+    if (!body.name && !body.number) {
+        return response.status(400).json({ 
+        error: 'content missing' 
+        })
+    }
+    
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(),
+    }
+    
+    persons = persons.concat(person)
+    
+    response.json(person)
     })
 
 
