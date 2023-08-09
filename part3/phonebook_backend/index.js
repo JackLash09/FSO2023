@@ -26,13 +26,18 @@ let persons = [
     }
 ]
 
-
 app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
+    response.send('<h1>Phonebook</h1>')
   })
   
 app.get('/api/persons', (request, response) => {
     response.json(persons)
+  })
+
+app.get('/info', (request, response) => {
+    const size = persons.length
+    const dateTime = new Date();
+    response.send("<p>Phonebook has info for "+size+" people</p><p>"+dateTime+"</p>")
   })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -44,6 +49,7 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end()
         }
     })
+
 
 const PORT = 3001
 app.listen(PORT)
