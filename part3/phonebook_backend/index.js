@@ -3,7 +3,8 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :body'))
+
 
 let persons = [
     { 
@@ -71,7 +72,6 @@ app.post('/api/persons', (request, response) => {
         error: 'The name or number is missing'
         })
     }
-
     persons.filter((person) => {
         if (person.name.toLowerCase().includes(body.name.toLowerCase())) {
             return response.status(400).json({
@@ -80,16 +80,14 @@ app.post('/api/persons', (request, response) => {
         }
         }
     )
-
     const person = {
         name: body.name,
         number: body.number,
         id: generateId(),
     }
-    
     persons = persons.concat(person)
-    
     response.json(person)
+    morgan.token('body', request => JSON.stringify(request.body))
     })
 
 
