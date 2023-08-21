@@ -1,9 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
+app.use(cors())
 app.use(express.json())
-app.use(morgan(':method :url :body'))
+//app.use(morgan(':method :url :body'))
 
 
 let persons = [
@@ -65,6 +67,17 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
     })
 
+app.put('/api/persons/:id', (request, response) => {
+    const body = request.body
+    const person = {
+      name: body.name,
+      number: body.number,
+      id: body.id,
+    }
+    persons = persons.concat(person)
+    response.json(person)
+})
+
 app.post('/api/persons', (request, response) => {
     const body = request.body
     if (!body.name && !body.number) {
@@ -73,7 +86,7 @@ app.post('/api/persons', (request, response) => {
         })
     }
     persons.filter((person) => {
-        if (person.name.toLowerCase().includes(body.name.toLowerCase())) {
+        if (person.name.toLowerCase() === (body.name.toLowerCase())) {
             return response.status(400).json({
                 error: 'The name already exists in the phonebook'
                 })
@@ -87,7 +100,7 @@ app.post('/api/persons', (request, response) => {
     }
     persons = persons.concat(person)
     response.json(person)
-    morgan.token('body', request => JSON.stringify(request.body))
+   // morgan.token('body', (req, res) => JSON.stringify(req.body))
     })
 
 
