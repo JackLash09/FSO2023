@@ -15,23 +15,23 @@ let persons = [
 ]
 
 app.get('/api/persons', (request, response) => {
-  console.log("running")
+  console.log('running')
   Person.find({}).then(persons => {
     response.json(persons)
   })
 })
 
 app.get('/info', (request, response) => {
-    const size = persons.length
-    const dateTime = new Date();
-    response.send("<p>Phonebook has info for "+size+" people</p><p>"+dateTime+"</p>")
-  })
+  const size = persons.length
+  const dateTime = new Date()
+  response.send('<p>Phonebook has info for '+size+' people</p><p>'+dateTime+'</p>')
+})
 
-  app.get('/api/persons/:id', (request, response) => {
-    Person.findById(request.params.id).then(person => {
-      response.json(person)
-    })
+app.get('/api/persons/:id', (request, response) => {
+  Person.findById(request.params.id).then(person => {
+    response.json(person)
   })
+})
 
 app.delete('/api/persons/:id', (request, response) => {
   Person.findByIdAndRemove(request.params.id)
@@ -63,12 +63,12 @@ app.post('/api/persons', (request, response, next) => {
 
   persons.filter((person) => {
     if (person.name.toLowerCase() === (body.name.toLowerCase())) {
-        return response.status(400).json({
-            error: 'The name already exists in the phonebook'
-            })
+      return response.status(400).json({
+        error: 'The name already exists in the phonebook'
+      })
     }
-    }
-)
+  })
+
   const person = new Person({
     name: body.name,
     number: body.number,
@@ -76,7 +76,7 @@ app.post('/api/persons', (request, response, next) => {
 
   person.save().then(savedPerson => {
     response.json(savedPerson)
-    })
+  })
     .catch(error => next(error))
 })
 
