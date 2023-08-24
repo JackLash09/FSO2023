@@ -1,15 +1,16 @@
 const express = require('express')
-// const morgan = require('morgan')
+const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
 
 const Person = require('./models/person')
 
+morgan.token('body', (req) => JSON.stringify(req.body))
+
 app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
-//app.use(morgan(':method :url :body'))
 
 let persons = [
 ]
@@ -55,7 +56,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response, next) => {
+app.post('/api/persons', morgan(':method :url :status :res[content-length] - :response-time ms :body'), (request, response, next) => {
   const body = request.body
   if (!body.name || !body.number) {
     return response.status(400).json({ error: 'The name and/or number is missing' })
@@ -79,6 +80,7 @@ app.post('/api/persons', (request, response, next) => {
   })
     .catch(error => next(error))
 })
+
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
